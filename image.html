@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>upload</title>
+	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<style type="text/css">
+	input[type=file]{
+		float:left;
+	}
+	
+</style>
+</head>
+<body>
+	<div class="container">
+	<h1>Uploader</h1>
+	<hr>
+
+<form action="#">
+	<input type="file" name="image">
+	<button class="btn btn-sm btn-info upload" type="submit">Upload</button>
+	<button type="button" class="btn btn-sm btn-danger cancel">Cancel</button><br><br>
+
+	<div class="progress progress-striped active">
+		<div class="progress-bar" style="width:0% "></div>
+	</div>
+</form>
+
+
+<form action="#">
+	<input type="file" name="image">
+	<button class="btn btn-sm btn-info upload" type="button">Upload</button>
+	<button type="button" class="btn btn-sm btn-danger cancel">Cancel</button><br><br>
+	<div class="progress progress-striped active">
+		<div class="progress-bar" style="width:0% "></div>
+	</div>
+</form>
+
+
+<form action="#">
+	<input type="file" name="image">
+	<button class="btn btn-sm btn-info upload" type="button">Upload</button>
+	<button type="button" class="btn btn-sm btn-danger cancel">Cancel</button><br><br>
+	<div class="progress progress-striped active">
+		<div class="progress-bar" style="width:0% "></div>
+	</div> 
+
+</div><!-------------------------------------------close container------->
+	<script>
+		$(document).on('submit','form', function(e){
+			e.preventDefault();
+			$form= $(this);
+			uploadImage($form);
+		});
+		 function uploadImage($form){
+
+		 	$form.find('.progress-bar')
+		 	.removeClass('progress-bar-success')
+		 	.removeClass('progress-bar-danger');
+
+		 	var formdata= new FormData($form[0]);
+		 	var request= new XMLHttpRequest();
+
+		 	//progress event
+		 	request.upload.addEventListener('progress',function(e){
+		 		var percent= Math.round(e.loaded/e.total * 100);
+		 		//console.log(percent);
+		 		$form.find('.progress-bar').width(percent+'%').html(percent+'%');
+		 	});
+
+
+		 	//progress complete load event
+		 	request.addEventListener('load',function (e) {
+		 				
+		 		$form.find('.progress-bar').addClass('progress-bar-success').html('upload completed...');
+		 		// body...
+		 	});
+
+		 	request.open('post','server.php');
+		 	request.send(formdata);
+			
+			$form.on("click",'.cancel',function(){
+		 		request.abort();
+		 		$form.find('.progress-bar')
+		 		.addClass('progress-bar-danger')
+		 		.removeClass('progress-bar-success')
+		 		.html('upload aborted...');
+		 	}); 
+		 }
+	</script>	
+</form>
+</body> 
+</html>
